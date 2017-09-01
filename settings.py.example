@@ -1,0 +1,23 @@
+databases = {
+    'redshift' : {
+        'type': 'psql',
+        'name': 'Redshift',
+        'db': 'db_name',
+        'host': 'localhost',
+        'port': 5432,
+        'user': '',
+        'pwd': ''
+    },
+    'mysql_db' : {
+        'type': 'mysql',
+        'name': 'My MySQL db',
+        'db': 'db_name',
+        'host': 'localhost',
+        'port': 3306,
+        'user': '',
+        'pwd': ''
+    }
+}
+
+slack_alerts = False
+slack_webhook_url = 'set this up at https://yourslackteam.slack.com/apps/search?q=webhooks'
