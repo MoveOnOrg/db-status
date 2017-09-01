@@ -1,20 +1,23 @@
-import psycopg2 # redshift
+import psycopg2
 import sys
 import settings
 import pymysql.cursors
+import requests
+import json
 
 
-def connect_redshift(redshift = settings.redshift):
+def connect_psql(psql):
     try:
-        con = psycopg2.connect(dbname = redshift['db'],
-                                host = redshift['host'], 
-                                port = redshift['port'], 
-                                user = redshift['user'], 
-                                password = redshift['pwd'])
-        print (con)
+        con = psycopg2.connect(dbname = psql['db'],
+                                host = psql['host'], 
+                                port = psql['port'], 
+                                user = psql['user'], 
+                                password = psql['pwd'])
         con.close()
     except:
-        print ("{} connection error: {}".format(redshift['name'],sys.exc_info()))
+        message = "{} connection error: {}".format(psql['name'],sys.exc_info())
+        if settings.slack_alerts:
+            post_to_slack_channel(message)
 
 
 def connect_mysql(mysql):
@@ -25,19 +28,14 @@ def connect_mysql(mysql):
                               db=mysql['db'],
                               charset='utf8mb4',
                               cursorclass=pymysql.cursors.DictCursor)
-        print(con)
         con.close()
     except:
-        print ("{} connection error: {}".format(mysql['name'],sys.exc_info()))
-
-# connect_redshift()
-connect_mysql(settings.ak_read_replica_shared)
-connect_mysql(settings.signon_read_replica)
+        message = "{} connection error: {}".format(mysql['name'],sys.exc_info())
+        if settings.slack_alerts:
+            post_to_slack_channel(message)
 
 
-# List of dbs to connect to:
-
-# ak read replica 1
-# ak read replica 2
-# petitions read replica
-
+def post_to_slack_channel(message, slack_webhook_url=settings.slack_webhook_url):
+    text = json.dumps({ 'text' : message })
+    print(text)
+    r = requests.post(slack_webhook_url, data = text)
