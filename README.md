@@ -1,12 +1,19 @@
-This Python 3.x script tries to connect to databases and sends a Slack alert with error text if it fails.
+This Python 3.6 script tries to connect to databases and sends a Slack alert with error text if it fails.
 
 ## Setup
 
-* Create a Python 3.x virtualenv: `virtualenv -p /path/to/python3 venv`
+* Create a Python 3.6 virtualenv: `virtualenv -p /path/to/python3.6 venv`
 * Activate the virtualenv: `source venv/bin/activate`
 * Install requirements: `pip install -r requirements.txt`
 * Create a settings file and fill it out: `cp settings.py.example settings.py`
 * Run script with `python check_dbs.py`
+
+## Deploy to AWS Lambda
+
+* Set up your AWS credentials in ~/aws/credentials
+* Install serverless: `npm install -g serverless@1.20.2`
+* `npm install`
+* `serverless deploy`
 
 ## TODO:
 
