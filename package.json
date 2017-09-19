@@ -1,0 +1,7 @@
+{
+  "name": "db-status-monitoring",
+  "version": "1.0.0",
+  "description": "Script that tries to connect to databases and sends a Slack alert with error text if it fails",
+  "author": "Sandra Chung for MoveOn.org",
+  "license": "MIT"
+}
