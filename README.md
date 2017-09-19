@@ -8,6 +8,13 @@ This Python 3.6 script tries to connect to databases and sends a Slack alert wit
 * Create a settings file and fill it out: `cp settings.py.example settings.py`
 * Run script with `python check_dbs.py`
 
+## Deploy to AWS Lambda
+
+* Set up your AWS credentials in ~/aws/credentials
+* Install serverless: `npm install -g serverless@1.20.2`
+* `npm install`
+* `serverless deploy`
+
 ## TODO:
 
 * Add support for email and SMS alerts.
