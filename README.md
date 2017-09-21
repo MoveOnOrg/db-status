@@ -12,8 +12,6 @@ This Python 3.6 script tries to connect to databases and sends a Slack alert wit
 ## Deploy to AWS Lambda with zappa
 
 * in settings.py, set `lambda_deploy = True`
-* Check out the zappa branch
-* `pip install zappa==0.44.3`
 * copy zappa_settings.json.example to zappa_settings.json and fill it out
 * set up your AWS creds that allow you to create s3 buckets, and add your target s3 bucket to zappa_settings.json
 * `zappa deploy production` or whatever the name of your stage is
