@@ -1,23 +1,39 @@
-import pg8000
 import sys
 import settings
 import pymysql.cursors
 import requests
 import json
-
+if settings.lambda_deploy:
+    import pg8000
+else:
+    import psycopg2
 
 def connect_psql(psql):
-    try:
-        con = pg8000.connect(database = psql['db'],
-                                host = psql['host'], 
-                                port = psql['port'], 
-                                user = psql['user'], 
-                                password = psql['pwd'])
-        con.close()
-    except:
-        message = "db-status {} connection error: {}".format(psql['name'],sys.exc_info())
-        if settings.slack_alerts:
-            post_to_slack(message)
+    if settings.lambda_deploy:
+        try:
+            con = pg8000.connect(database = psql['db'],
+                                    host = psql['host'], 
+                                    port = psql['port'], 
+                                    user = psql['user'], 
+                                    password = psql['pwd'])
+            con.close()
+        
+        except:
+            message = "db-status {} connection error: {}".format(psql['name'],sys.exc_info())
+            if settings.slack_alerts:
+                post_to_slack(message)
+    else:
+        try:
+            con = psycopg2.connect(dbname = psql['db'],
+                                    host = psql['host'], 
+                                    port = psql['port'], 
+                                    user = psql['user'], 
+                                    password = psql['pwd'])
+            con.close()
+        except:
+            message = "db-status {} connection error: {}".format(psql['name'],sys.exc_info())
+            if settings.slack_alerts:
+                post_to_slack(message)
 
 
 def connect_mysql(mysql):
