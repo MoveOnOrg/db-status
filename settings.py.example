@@ -19,5 +19,6 @@ databases = {
     }
 }
 
-slack_alerts = False
+lambda_deploy = False
+slack_alerts = True
 slack_webhook_url = 'set this up at https://yourslackteam.slack.com/apps/search?q=webhooks'

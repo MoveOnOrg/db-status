@@ -1,0 +1,3 @@
+-r requirements.txt
+zappa==0.44.3
+pg8000==1.11.0

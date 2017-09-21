@@ -1,24 +1,42 @@
-import psycopg2
 import sys
 import settings
 import pymysql.cursors
 import requests
 import json
+if settings.lambda_deploy:
+    import pg8000
+else:
+    import psycopg2
 
+def slack_alert(name, slack_webhook_url = settings.slack_webhook_url):
+    message = "db-status {} connection error: {}".format(name,sys.exc_info())
+    text = json.dumps({ 'text' : message })
+    print(text)
+    if settings.slack_alerts:
+        r = requests.post(slack_webhook_url, data = text)
 
 def connect_psql(psql):
-    try:
-        con = psycopg2.connect(dbname = psql['db'],
-                                host = psql['host'], 
-                                port = psql['port'], 
-                                user = psql['user'], 
-                                password = psql['pwd'])
-        con.close()
-    except:
-        message = "{} connection error: {}".format(psql['name'],sys.exc_info())
-        if settings.slack_alerts:
-            post_to_slack(message)
-
+    if settings.lambda_deploy:
+        try:
+            con = pg8000.connect(database = psql['db'],
+                                    host = psql['host'], 
+                                    port = psql['port'], 
+                                    user = psql['user'], 
+                                    password = psql['pwd'])
+            con.close()
+        except:
+            slack_alert(psql['name'])
+            
+    else:
+        try:
+            con = psycopg2.connect(dbname = psql['db'],
+                                    host = psql['host'], 
+                                    port = psql['port'], 
+                                    user = psql['user'], 
+                                    password = psql['pwd'])
+            con.close()
+        except:
+            slack_alert(psql['name'])
 
 def connect_mysql(mysql):
     try:
@@ -30,12 +48,4 @@ def connect_mysql(mysql):
                               cursorclass=pymysql.cursors.DictCursor)
         con.close()
     except:
-        message = "{} connection error: {}".format(mysql['name'],sys.exc_info())
-        if settings.slack_alerts:
-            post_to_slack(message)
-
-
-def post_to_slack(message, slack_webhook_url=settings.slack_webhook_url):
-    text = json.dumps({ 'text' : message })
-    print(text)
-    r = requests.post(slack_webhook_url, data = text)
+        slack_alert(mysql['name'])

@@ -1,4 +1,4 @@
-from connect import connect_psql, connect_mysql, post_to_slack
+from connect import connect_psql, connect_mysql
 import settings
 
 def main():
