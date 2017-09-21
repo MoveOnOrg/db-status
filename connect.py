@@ -1,4 +1,4 @@
-import psycopg2
+import pg8000
 import sys
 import settings
 import pymysql.cursors
@@ -8,14 +8,14 @@ import json
 
 def connect_psql(psql):
     try:
-        con = psycopg2.connect(dbname = psql['db'],
+        con = pg8000.connect(database = psql['db'],
                                 host = psql['host'], 
                                 port = psql['port'], 
                                 user = psql['user'], 
                                 password = psql['pwd'])
         con.close()
     except:
-        message = "{} connection error: {}".format(psql['name'],sys.exc_info())
+        message = "db-status {} connection error: {}".format(psql['name'],sys.exc_info())
         if settings.slack_alerts:
             post_to_slack(message)
 
@@ -30,7 +30,7 @@ def connect_mysql(mysql):
                               cursorclass=pymysql.cursors.DictCursor)
         con.close()
     except:
-        message = "{} connection error: {}".format(mysql['name'],sys.exc_info())
+        message = "db-status {} connection error: {}".format(mysql['name'],sys.exc_info())
         if settings.slack_alerts:
             post_to_slack(message)
 
