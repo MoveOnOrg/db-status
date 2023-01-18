@@ -1,3 +1,8 @@
+# DEPRECATED
+
+Decommissioned as of 1/18/23 because we have a lot of other monitoring and alerting tools that tell us if DBs are broken.
+
+-----
 This Python 3.6 script tries to connect to databases and sends a Slack alert with error text if it fails.
 
 ## Setup
